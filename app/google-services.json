@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "587286929852",
+    "project_id": "event-explorer-24b40",
+    "storage_bucket": "event-explorer-24b40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587286929852:android:427d5ceea8daa3d7bc4bb9",
+        "android_client_info": {
+          "package_name": "com.example.eventexplorer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa4fc6MK4oraVROk5wFIxAQiiZJLKOP8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

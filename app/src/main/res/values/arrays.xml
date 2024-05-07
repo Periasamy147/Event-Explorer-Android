@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Event Names -->
+    <string-array name="event_names">
+        <item>Event 1</item>
+        <item>Event 2</item>
+        <item>Event 3</item>
+        <!-- Add more event names as needed -->
+    </string-array>
+
+    <!-- Event Prices -->
+    <string-array name="event_prices">
+        <item>10.0</item> <!-- Price for Event 1 -->
+        <item>15.0</item> <!-- Price for Event 2 -->
+        <item>20.0</item> <!-- Price for Event 3 -->
+        <!-- Add more event prices corresponding to event names -->
+    </string-array>
+</resources>
