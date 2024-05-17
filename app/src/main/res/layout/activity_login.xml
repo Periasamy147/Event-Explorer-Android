@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:background="@drawable/bg"
+    android:background="@drawable/bgss"
     tools:context=".loginActivity">
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="185dp"
         android:gravity="center"
-        android:text="Event Explorer"
+        android:text="FOMO"
         android:textColor="@color/white"
         android:textSize="40dp" />
 
@@ -58,10 +58,10 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/id_login"
@@ -88,7 +88,7 @@
         android:textColor="@color/boneWhite" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/resetPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_login"
@@ -114,7 +114,7 @@
         android:id="@+id/toSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/resetPass"
         android:layout_marginStart="8dp"
         android:layout_marginTop="240dp"
         android:layout_toEndOf="@+id/textView5"

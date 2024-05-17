@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EventExplorer"
         tools:targetApi="31">
+        <activity
+            android:name=".resetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profileRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mapActivity"
+            android:exported="false" />
         <activity
             android:name=".signUpActivity"
             android:exported="true" />
@@ -32,7 +52,11 @@
             android:exported="false" />
         <activity
             android:name=".loginActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBVslZ9Qde58wApzuCGTfsZHnXn_cKTd7I" />
     </application>
 
 </manifest>

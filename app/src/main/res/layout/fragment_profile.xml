@@ -1,42 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
-    tools:context=".profileFragment">
+    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Center the child views horizontally and vertically -->
-    <LinearLayout
+    <!-- Include custom toolbar -->
+    <include
+        layout="@layout/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- ScrollView with content -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_below="@id/toolbar"> <!-- Place ScrollView below the toolbar -->
 
-        <!-- TextView with "Hello World" text -->
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
+            android:orientation="vertical">
 
-        <!-- Button for logout -->
-        <Button
-            android:id="@+id/logoutButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:textColor="@android:color/white"
-            android:background="@drawable/rounded_corner"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginTop="16dp" />
+            <!-- Circular ImageView -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
 
-    </LinearLayout>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/action_hero"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+            </FrameLayout>
 
-</FrameLayout>
+            <!-- TextViews for user data -->
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/textViewName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/textViewAddress1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textViewAddress2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textViewLandmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textViewTown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textViewState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/textViewPinCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

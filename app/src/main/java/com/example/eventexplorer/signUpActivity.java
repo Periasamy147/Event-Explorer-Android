@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class signUpActivity extends AppCompatActivity {
 
-    EditText mail, pass;
+    EditText mail, pass, Cpass;
     Button signUp;
     ProgressBar progressBar;
     TextView toLogin;
@@ -30,7 +30,7 @@ public class signUpActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), mainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), profileRegisterActivity.class);
             startActivity(intent);
             finish();
         }
@@ -49,14 +49,16 @@ public class signUpActivity extends AppCompatActivity {
         signUp = findViewById(R.id.buttonSignUp);
         progressBar = findViewById(R.id.progressBar);
         toLogin = findViewById(R.id.toLogin);
+        Cpass = findViewById(R.id.editTextConfirmPassword);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                String email, password;
+                String email, password, confirmPassword;
                 email = String.valueOf(mail.getText());
                 password = String.valueOf(pass.getText());
+                confirmPassword = String.valueOf(Cpass.getText());
 
                 if (TextUtils.isEmpty(email)){
                     Toast.makeText(signUpActivity.this, "Enter Email.", Toast.LENGTH_SHORT).show();
@@ -70,18 +72,38 @@ public class signUpActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (!password.equals(confirmPassword)) {
+                    Toast.makeText(signUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    return;
+                }
+
                 auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(signUpActivity.this, task -> {
                             progressBar.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
-                                Toast.makeText(signUpActivity.this, "Account Created.", Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = auth.getCurrentUser();
+                                if (user != null) {
+                                    // Send email verification
+                                    user.sendEmailVerification()
+                                            .addOnCompleteListener(task1 -> {
+                                                if (task1.isSuccessful()) {
+                                                    Toast.makeText(signUpActivity.this, "Verification email sent to " + email, Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Log.e(TAG, "sendEmailVerification", task1.getException());
+                                                    Toast.makeText(signUpActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
                             } else {
-                                Toast.makeText(signUpActivity.this, "Authentication failed.",
+                                Toast.makeText(signUpActivity.this, "Authentication failed: " + task.getException().getMessage(),
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         });
+
+
 
         // Set onClickListener for "Sign up" TextView to navigate to login activity
         toLogin.setOnClickListener(new View.OnClickListener() {

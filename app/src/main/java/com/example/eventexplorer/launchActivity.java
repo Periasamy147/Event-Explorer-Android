@@ -16,24 +16,26 @@ public class launchActivity extends AppCompatActivity {
 
     LottieAnimationView lottie;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_launch);
 
-
-        lottie =findViewById(R.id.lottieAnimationView2);
+        lottie = findViewById(R.id.lottieAnimationView2);
         lottie.animate();
         lottie.playAnimation();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(getApplicationContext(), signUpActivity.class);
+                // Start the sign-up activity
+                Intent i = new Intent(getApplicationContext(), loginActivity.class);
                 startActivity(i);
+
+                // Finish the launch activity
+                finish();
             }
-        },1000);
+        }, 1000);
     }
 }

@@ -18,41 +18,47 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class loginActivity extends AppCompatActivity {
 
-    EditText mail, password;
-    TextView sign;
+    EditText mailOrName, password;
+    TextView sign, resetPasssword;
     Button login;
     FirebaseAuth auth;
     ProgressBar progressBar;
+    private static final String TAG = "LoginActivity"; // Added for logging purposes
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), mainActivity.class);
             startActivity(intent);
             finish();
         }
     }
 
-    private static final String TAG = "LoginActivity"; // Added for logging purposes
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mail = findViewById(R.id.id_username);
+        mailOrName = findViewById(R.id.id_username);
         password = findViewById(R.id.id_password);
         login = findViewById(R.id.id_login);
         sign = findViewById(R.id.toSignUp);
         progressBar = findViewById(R.id.progressBar);
         auth = FirebaseAuth.getInstance();
+        resetPasssword = findViewById(R.id.resetPass);
 
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +72,12 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                String email, pass;
-                email = mail.getText().toString();
+                String input, pass;
+                input = mailOrName.getText().toString();
                 pass = password.getText().toString();
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(loginActivity.this, "Enter Email.", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(input)) {
+                    Toast.makeText(loginActivity.this, "Enter Email or Name.", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
@@ -82,23 +88,76 @@ public class loginActivity extends AppCompatActivity {
                     return;
                 }
 
-                auth.signInWithEmailAndPassword(email, pass)
-                        .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(loginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), mainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(loginActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                // Check if input is an email or name
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()) {
+                    loginUser(input, pass);
+                } else {
+                    findEmailByNameAndLogin(input, pass);
+                }
+            }
+        });
+
+        resetPasssword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(loginActivity.this, resetPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }
+
+    private void loginUser(String email, String pass) {
+        auth.signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            Toast.makeText(loginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), mainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                                Toast.makeText(loginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                            } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                Toast.makeText(loginActivity.this, "Invalid password.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(loginActivity.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    private void findEmailByNameAndLogin(String name, String pass) {
+        FirebaseDatabase.getInstance().getReference("User Data")
+                .orderByChild("name")
+                .equalTo(name)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                                String email = userSnapshot.child("email").getValue(String.class);
+                                loginUser(email, pass);
+                                return;
+                            }
+                        } else {
+                            Toast.makeText(loginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(loginActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+    }
 }
+
